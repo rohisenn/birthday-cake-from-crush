@@ -20,6 +20,7 @@ import { BirthdayCard } from "./components/BirthdayCard";
 import { HappyBirthday } from "./components/HappyBirthday";
 import { Balloons } from "./components/Balloons";
 import { Bear } from "./components/Bear";
+import { GiftBox } from "./components/GiftBox";
 
 import "./App.css";
 
@@ -294,7 +295,8 @@ function AnimatedScene({
       <group ref={tableGroup}>
         <Table />
         <Balloons />
-        <Bear position={[2, 1.25, 3.5]} rotation={[0, 2.5, 0]} scale={0.3} />
+        <Bear position={[2, 1.25, 4]} rotation={[0, 2.5, 0]} scale={0.3} />
+        <GiftBox position={[2, 0.1, -3.5]} rotation={[0, 0.5, 0]} scale={0.5} />
         <PictureFrame
           image="/frame2.jpg"
           position={[0, 0.735, 3]}

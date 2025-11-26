@@ -89,3 +89,161 @@ canvas {
   pointer-events: none;
   z-index: 3;
 }
+
+.envelope-page {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background-image: url('/photos/envelope.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.envelope-container {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.open-button {
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 12px 24px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.open-button:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.camera-page {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background-image: url('/photos/camera.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.camera-container {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.third-page {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background-image: url('/photos/3rd.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.third-container {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.fourth-page {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background-image: url('/photos/make a wish.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.fourth-container {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.message {
+  position: absolute;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #ffffff;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+  animation: slideUp 0.8s ease-out;
+}
+
+.left-message {
+  bottom: 60%;
+  left: 10%;
+  animation-delay: 0.5s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.right-message {
+  bottom: 45%;
+  right: 10%;
+  animation-delay: 1s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.left-message-2 {
+  bottom: 30%;
+  left: 15%;
+  animation-delay: 1.5s;
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

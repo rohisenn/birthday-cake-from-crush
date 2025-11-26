@@ -77,7 +77,7 @@ const BACKGROUND_FADE_START = Math.max(
 );
 
 const TYPED_LINES = [
-  "> tina",
+  "> Aarthuuu",
   "...",
   "> today is your birthday",
   "...",
@@ -100,8 +100,8 @@ const BIRTHDAY_CARDS: ReadonlyArray<BirthdayCardConfig> = [
   {
     id: "confetti",
     image: "/card.png",
-    position: [1, 0.081, -2],
-    rotation: [-Math.PI / 2 , 0, Math.PI / 3],
+    position: [0.5, 0.081, -1.5],
+    rotation: [-Math.PI / 2 , 0, Math.PI / 4],
   }
 ];
 
@@ -372,6 +372,7 @@ export default function App() {
   const [environmentProgress, setEnvironmentProgress] = useState(0);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
+  const [showEnvelopePage, setShowEnvelopePage] = useState(true);
   const [sceneStarted, setSceneStarted] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(true);
   const [hasAnimationCompleted, setHasAnimationCompleted] = useState(false);
@@ -511,33 +512,49 @@ export default function App() {
     setActiveCardId((current) => (current === id ? null : id));
   }, []);
 
+  const handleEnvelopeOpen = useCallback(() => {
+    setShowEnvelopePage(false);
+    setHasStarted(true);
+  }, []);
+
   const isScenePlaying = hasStarted && sceneStarted;
 
   return (
     <div className="App">
-      <div
-        className="background-overlay"
-        style={{ opacity: backgroundOpacity }}
-      >
-        <div className="typed-text">
-          {typedLines.map((line, index) => {
-            const showCursor =
-              cursorVisible &&
-              index === cursorTargetIndex &&
-              (!typingComplete || !sceneStarted);
-            return (
-              <span className="typed-line" key={`typed-line-${index}`}>
-                {line || "\u00a0"}
-                {showCursor && (
-                  <span aria-hidden="true" className="typed-cursor">
-                    _
-                  </span>
-                )}
-              </span>
-            );
-          })}
+      {hasStarted && !sceneStarted && (
+        <div
+          className="background-overlay"
+          style={{ opacity: backgroundOpacity }}
+        >
+          <div className="typed-text">
+            {typedLines.map((line, index) => {
+              const showCursor =
+                cursorVisible &&
+                index === cursorTargetIndex &&
+                !typingComplete;
+              return (
+                <span className="typed-line" key={`typed-line-${index}`}>
+                  {line || "\u00a0"}
+                  {showCursor && (
+                    <span aria-hidden="true" className="typed-cursor">
+                      _
+                    </span>
+                  )}
+                </span>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
+      {showEnvelopePage && (
+        <div className="envelope-page">
+          <div className="envelope-container">
+            <button className="open-button" onClick={handleEnvelopeOpen}>
+              Open
+            </button>
+          </div>
+        </div>
+      )}
       {hasAnimationCompleted && isCandleLit && (
         <div className="hint-overlay">press space to blow out the candle</div>
       )}

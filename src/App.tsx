@@ -17,6 +17,7 @@ import { Table } from "./models/table";
 import { PictureFrame } from "./models/pictureFrame";
 import { Fireworks } from "./components/Fireworks";
 import { BirthdayCard } from "./components/BirthdayCard";
+import { HappyBirthday } from "./components/HappyBirthday";
 
 import "./App.css";
 
@@ -307,6 +308,7 @@ function AnimatedScene({
       <group ref={candleGroup}>
         <Candle isLit={candleLit} scale={0.25} position={[0, 1.1, 0]} />
       </group>
+      <HappyBirthday position={[0, 2.5, 0]} scale={1} />
     </>
   );
 }

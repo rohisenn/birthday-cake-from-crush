@@ -1,17 +1,31 @@
-import { useLoader } from "@react-three/fiber";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { useMemo } from "react";
-import type { ThreeElements } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
+import { useLayoutEffect, useRef } from "react";
+import type { JSX } from "react/jsx-dev-runtime";
+import * as THREE from "three";
 
-type HappyBirthdayProps = ThreeElements["group"];
+// Preload the model
+useGLTF.preload("/happybirthday.glb");
 
-export function HappyBirthday(props: HappyBirthdayProps) {
-  const gltf = useLoader(GLTFLoader, "/happybirthday.glb");
-  const scene = useMemo(() => gltf.scene.clone(true), [gltf.scene]);
+export function HappyBirthday(props: JSX.IntrinsicElements['group']) {
+  const { scene } = useGLTF("/happybirthday.glb");
+  const modelRef = useRef<THREE.Group>(null);
+
+  useLayoutEffect(() => {
+    if (modelRef.current) {
+      // Apply materials or shadow settings if needed
+      modelRef.current.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+    }
+  }, []);
 
   return (
     <group {...props}>
-      <primitive object={scene} />
+      {/* Scale set to 1.0, adjust if model is too large/small */}
+      <primitive ref={modelRef} object={scene} scale={[1, 1, 1]} />
     </group>
   );
 }

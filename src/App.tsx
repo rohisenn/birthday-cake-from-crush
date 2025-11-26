@@ -37,6 +37,7 @@ type AnimatedSceneProps = {
   cards: ReadonlyArray<BirthdayCardConfig>;
   activeCardId: string | null;
   onToggleCard: (id: string) => void;
+  fireworksActive: boolean;
 };
 
 const CAKE_START_Y = 10;
@@ -115,10 +116,13 @@ function AnimatedScene({
   cards,
   activeCardId,
   onToggleCard,
+  fireworksActive,
 }: AnimatedSceneProps) {
   const cakeGroup = useRef<Group>(null);
   const tableGroup = useRef<Group>(null);
   const candleGroup = useRef<Group>(null);
+  const happyBirthdayGroup = useRef<Group>(null);
+  
   const animationStartRef = useRef<number | null>(null);
   const hasPrimedRef = useRef(false);
   const hasCompletedRef = useRef(false);
@@ -151,14 +155,20 @@ function AnimatedScene({
     const cake = cakeGroup.current;
     const table = tableGroup.current;
     const candle = candleGroup.current;
+    const sign = happyBirthdayGroup.current;
 
-    if (!cake || !table || !candle) {
+    if (!cake || !table || !candle || !sign) {
       return;
     }
 
     if (!hasPrimedRef.current) {
       cake.position.set(0, CAKE_START_Y, 0);
       cake.rotation.set(0, 0, 0);
+      
+      // Initialize sign above cake
+      sign.position.set(0, CAKE_START_Y + 2.5, 0);
+      sign.rotation.set(0, 0, 0);
+      
       table.position.set(0, 0, TABLE_START_Z);
       table.rotation.set(0, 0, 0);
       candle.position.set(0, CANDLE_START_Y, 0);
@@ -192,15 +202,26 @@ function AnimatedScene({
     const elapsed = clock.elapsedTime - animationStartRef.current;
     const clampedElapsed = clamp(elapsed, 0, totalAnimationTime);
 
+    // --- Cake Animation ---
     const cakeProgress = clamp(clampedElapsed / CAKE_DESCENT_DURATION, 0, 1);
     const cakeEase = easeOutCubic(cakeProgress);
-    cake.position.y = lerp(CAKE_START_Y, CAKE_END_Y, cakeEase);
+    const currentCakeY = lerp(CAKE_START_Y, CAKE_END_Y, cakeEase);
+    
+    cake.position.y = currentCakeY;
     cake.position.x = 0;
     cake.position.z = 0;
-    cake.rotation.y = cakeEase * Math.PI * 2;
+    cake.rotation.y = cakeEase * Math.PI * 2; // Cake spins
     cake.rotation.x = 0;
     cake.rotation.z = 0;
 
+    // --- Happy Birthday Sign Animation ---
+    // Follows the cake's Y position but DOES NOT spin
+    sign.position.y = currentCakeY + 2.5; 
+    sign.position.x = 0;
+    sign.position.z = 0;
+    sign.rotation.set(0, 0, 0); // Static rotation
+
+    // --- Table Animation ---
     let tableZ = TABLE_START_Z;
     if (clampedElapsed >= TABLE_SLIDE_START) {
       const tableProgress = clamp(
@@ -214,6 +235,7 @@ function AnimatedScene({
     table.position.set(0, 0, tableZ);
     table.rotation.set(0, 0, 0);
 
+    // --- Candle Animation ---
     if (clampedElapsed >= CANDLE_DROP_START) {
       if (!candle.visible) {
         candle.visible = true;
@@ -249,6 +271,9 @@ function AnimatedScene({
     if (animationDone) {
       cake.position.set(0, CAKE_END_Y, 0);
       cake.rotation.set(0, 0, 0);
+      
+      sign.position.set(0, CAKE_END_Y + 2.5, 0); // Final position
+      
       table.position.set(0, 0, TABLE_END_Z);
       candle.position.set(0, CANDLE_END_Y, 0);
       candle.visible = true;
@@ -305,10 +330,12 @@ function AnimatedScene({
       <group ref={cakeGroup}>
         <Cake />
       </group>
+      <group ref={happyBirthdayGroup}>
+        <HappyBirthday />
+      </group>
       <group ref={candleGroup}>
         <Candle isLit={candleLit} scale={0.25} position={[0, 1.1, 0]} />
       </group>
-      <HappyBirthday position={[0, 2.5, 0]} scale={1} />
     </>
   );
 }
@@ -577,6 +604,7 @@ export default function App() {
             cards={BIRTHDAY_CARDS}
             activeCardId={activeCardId}
             onToggleCard={handleCardToggle}
+            fireworksActive={fireworksActive}
           />
           <ambientLight intensity={(1 - environmentProgress) * 0.8} />
           <directionalLight intensity={0.5} position={[2, 10, 0]} color={[1, 0.9, 0.95]}/>
@@ -589,7 +617,7 @@ export default function App() {
             backgroundIntensity={0.05 * environmentProgress}
           />
           <EnvironmentBackgroundController intensity={0.05 * environmentProgress} />
-          <Fireworks isActive={fireworksActive} origin={[0, 10, 0]} />
+          <Fireworks isActive={fireworksActive} />
           <ConfiguredOrbitControls />
         </Suspense>
       </Canvas>

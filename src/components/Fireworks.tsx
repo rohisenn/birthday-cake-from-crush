@@ -1,4 +1,5 @@
 import { useFrame } from "@react-three/fiber";
+import { Clone, useAnimations, useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
 import {
   BufferAttribute,
@@ -8,6 +9,10 @@ import {
   PointsMaterial,
   Vector3,
 } from "three";
+import * as THREE from "three";
+
+// Preload the model
+useGLTF.preload("/fireworks.glb");
 
 type FireworksProps = {
   isActive: boolean;
@@ -36,6 +41,7 @@ const randomColor = () => {
 };
 
 export function Fireworks({ isActive, origin = [0, 5, -14] }: FireworksProps) {
+  const { scene, animations } = useGLTF("/fireworks.glb");
   const geometryRef = useRef<BufferGeometry>(null);
   const materialRef = useRef<PointsMaterial>(null);
   const dataRef = useRef<FireworkData | null>(null);
@@ -186,6 +192,61 @@ export function Fireworks({ isActive, origin = [0, 5, -14] }: FireworksProps) {
           sizeAttenuation
         />
       </points>
+      
+      <FireworkInstance
+        scene={scene}
+        animations={animations}
+        position={[-4, -2, -3]}
+        isActive={isActive}
+        delay={0}
+      />
+      <FireworkInstance
+        scene={scene}
+        animations={animations}
+        position={[4, -2, -3]}
+        isActive={isActive}
+        delay={0.5}
+      />
+    </group>
+  );
+}
+
+type FireworkInstanceProps = {
+  scene: THREE.Group;
+  animations: THREE.AnimationClip[];
+  position: [number, number, number];
+  isActive: boolean;
+  delay: number;
+};
+
+function FireworkInstance({
+  scene,
+  animations,
+  position,
+  isActive,
+  delay,
+}: FireworkInstanceProps) {
+  const { ref, actions } = useAnimations(animations);
+
+  useEffect(() => {
+    if (isActive) {
+      const timeout = setTimeout(() => {
+        Object.values(actions).forEach((action) => {
+          if (action) {
+            action.reset().play();
+          }
+        });
+      }, delay * 1000);
+
+      return () => clearTimeout(timeout);
+    } else {
+      Object.values(actions).forEach((action) => action?.stop());
+    }
+  }, [isActive, actions, delay]);
+
+  return (
+    <group position={position} visible={isActive}>
+      <Clone ref={ref as any} object={scene} scale={1.5} />
     </group>
   );
 }

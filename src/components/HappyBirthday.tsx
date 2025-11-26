@@ -25,7 +25,7 @@ export function HappyBirthday(props: JSX.IntrinsicElements['group']) {
   return (
     <group {...props}>
       {/* Scale set to 1.0, adjust if model is too large/small */}
-      <primitive ref={modelRef} object={scene} scale={[1, 1, 1]} />
+      <primitive ref={modelRef} object={scene} scale={[1, 1.2, 1]} />
     </group>
   );
 }

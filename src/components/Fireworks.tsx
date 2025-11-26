@@ -203,7 +203,7 @@ export function Fireworks({ isActive, origin = [0, 5, -14] }: FireworksProps) {
       <FireworkInstance
         scene={scene}
         animations={animations}
-        position={[4, -2, -3]}
+        position={[4, 2, 3]}
         isActive={isActive}
         delay={0.5}
       />
